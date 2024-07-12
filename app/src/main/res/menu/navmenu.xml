@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tab_alarm"
+        android:icon="@drawable/alarmred"
+        android:title="Alarm" />
+    <item
+        android:id="@+id/tab_timezone"
+        android:icon="@drawable/timezone"
+        android:title="TimeZone"
+        />
+
+    <item
+        android:id="@+id/tab_stopwatch"
+        android:icon="@drawable/stopwatchred"
+        android:title="StopWatch" />
+
+    <item
+        android:id="@+id/tab_weather"
+        android:icon="@drawable/weather"
+        android:title="Weather" />
+
+    <item
+        android:id="@+id/tab_clock"
+        android:icon="@drawable/clock"
+        android:title="Clock" />
+</menu>
