@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.tab_alarm -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_weather -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_clock -> setCurrentFragment(stopWatchFragment)
-                R.id.tab_timezone -> setCurrentFragment(stopWatchFragment)
+                R.id.tab_timer -> setCurrentFragment(stopWatchFragment)
             }
 
             // Remove the badge from the selected tab

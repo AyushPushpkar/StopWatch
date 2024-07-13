@@ -6,9 +6,9 @@
         android:icon="@drawable/alarmred"
         android:title="Alarm" />
     <item
-        android:id="@+id/tab_timezone"
-        android:icon="@drawable/timezone"
-        android:title="TimeZone"
+        android:id="@+id/tab_timer"
+        android:icon="@drawable/timerred"
+        android:title="Timer"
         />
 
     <item
@@ -23,6 +23,6 @@
 
     <item
         android:id="@+id/tab_clock"
-        android:icon="@drawable/clock"
+        android:icon="@drawable/clockred"
         android:title="Clock" />
 </menu>

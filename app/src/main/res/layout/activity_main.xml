@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backmain"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -35,8 +35,8 @@
         app:abb_textStyle="bold"
         app:abb_textSize="14sp"
         app:abb_selectedTabType="text"
-        app:abb_tabColor="@color/red"
-        app:abb_tabColorSelected="@color/red"
+        app:abb_tabColor="#F1184B"
+        app:abb_tabColorSelected="#F1184B"
         app:abb_tabs="@menu/navmenu"
         app:abb_badgeBackgroundColor="#00BCD4"
         app:abb_badgeAnimation="scale"
