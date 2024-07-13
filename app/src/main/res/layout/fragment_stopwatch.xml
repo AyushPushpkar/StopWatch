@@ -19,12 +19,11 @@
 
             <ImageView
                 android:id="@+id/runbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/radial_watch"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,7 +47,7 @@
                 android:id="@+id/chronometer2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/allerta_stencil"
                 android:text="00.00.00"
                 android:textColor="@color/white"
@@ -61,7 +60,7 @@
                 android:id="@+id/resetbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/btnback"
                 android:fontFamily="@font/krona_one"
@@ -80,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="60dp"
                 android:background="@drawable/btnback"
                 android:fontFamily="@font/krona_one"
                 android:paddingStart="25dp"
@@ -106,6 +105,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="65dp"
                 android:layout_height="541dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/lapbtn"
                 app:layout_constraintHorizontal_bias="0.438"
                 app:layout_constraintStart_toStartOf="@+id/resetbtn"

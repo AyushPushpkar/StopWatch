@@ -75,7 +75,10 @@ class TimerFragment : Fragment() {
         }
         handler.post(updateChronometer)
 
-        binding.pausebtn.text = "Pause"
+        binding.pausebtn.apply {
+            text = "Pause"
+            setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 18f) // Change the text size here as needed
+        }
     }
 
     private val updateChronometer: Runnable = object : Runnable {
@@ -123,7 +126,7 @@ class TimerFragment : Fragment() {
         val pendingIntent = PendingIntent.getActivity(requireContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         notification.setContentTitle("Timer")
-        notification.setContentText("/nTime's Up !")
+        notification.setContentText("Time's Up !")
         notification.setSmallIcon(R.drawable.timerred)
         notification.setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)

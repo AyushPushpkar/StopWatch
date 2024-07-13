@@ -1,6 +1,8 @@
 package com.example.stopwatch.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,14 +13,16 @@ import androidx.appcompat.app.AlertDialog
 import com.example.stopwatch.R
 import com.example.stopwatch.databinding.DialogBinding
 import com.example.stopwatch.databinding.FragmentStopwatchBinding
+import java.util.concurrent.TimeUnit
 
 class StopWatchFragment : Fragment() {
 
     private lateinit var binding: FragmentStopwatchBinding
-    private var minutes : String? = "00"
     private var isRunning = false
-    private var initialBaseTime: Long = 0
-    private var pausedTime: Long = 0
+    private var startTime: Long = 0
+    private var elapsedTime: Long = 0
+    private var handler = Handler(Looper.getMainLooper())
+    private val updateInterval = 50L
 
     var lapList = ArrayList<String>()
     private lateinit var arrayAdapter: ArrayAdapter<String>
@@ -59,41 +63,41 @@ class StopWatchFragment : Fragment() {
 
     private fun startStopwatch() {
         isRunning = true
-        if (minutes == "00" || minutes == null || minutes == "0") {
-            // Start from zero and count upwards
-            binding.chronometer2.base = SystemClock.elapsedRealtime()
-            binding.chronometer2.start()
-
-            binding.chronometer2.format = "%S %S "
-            binding.textView3.text = "Stop"
-
-            binding.chronometer2.setOnChronometerTickListener {
-                val elapsedtime = binding.chronometer2.base - SystemClock.elapsedRealtime()
-                if (elapsedtime >= 0) {
-                    binding.chronometer2.stop()
-                    isRunning = false
-                    binding.textView3.text = "Run"
-                }
-            }
-        }
+        startTime = SystemClock.elapsedRealtime() - elapsedTime
+        handler.postDelayed(runnable, updateInterval)
+        binding.textView3.text = "Pause"
     }
 
     private fun pauseStopwatch() {
-            binding.chronometer2.stop()
-            pausedTime = SystemClock.elapsedRealtime() - binding.chronometer2.base
-            isRunning = false
-            binding.textView3.text = "Run"
+        isRunning = false
+        handler.removeCallbacks(runnable)
+        binding.textView3.text = "Resume"
     }
 
     private fun resetStopwatch() {
-        binding.chronometer2.stop()
         isRunning = false
+        handler.removeCallbacks(runnable)
+        binding.chronometer2.text = "00:00.00"
+        elapsedTime = 0
         binding.textView3.text = "Run"
-        pausedTime = 0
-        binding.chronometer2.base = SystemClock.elapsedRealtime()
 
         lapList.clear()
         arrayAdapter.notifyDataSetChanged()
+    }
+
+    private val runnable: Runnable = object : Runnable {
+        override fun run() {
+            elapsedTime = SystemClock.elapsedRealtime() - startTime
+            binding.chronometer2.text = formatTime(elapsedTime)
+            handler.postDelayed(this, updateInterval)
+        }
+    }
+
+    private fun formatTime(time: Long): String {
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(time)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60
+        val milliseconds = time % 1000 / 10
+        return String.format("%02d:%02d.%02d", minutes, seconds, milliseconds)
     }
 
 }

@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomBar.post {
             // Adding badges to specific tabs
-            binding.bottomBar.setBadgeAtTabIndex(0, AnimatedBottomBar.Badge("99"))
+            binding.bottomBar.setBadgeAtTabIndex(1, AnimatedBottomBar.Badge("99"))
             binding.bottomBar.setBadgeAtTabIndex(4, AnimatedBottomBar.Badge("5"))
         }
 
