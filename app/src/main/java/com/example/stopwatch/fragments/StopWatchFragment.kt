@@ -30,9 +30,6 @@ class StopWatchFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentStopwatchBinding.inflate(inflater, container, false)
 
-        binding.clockwhitebtn.setOnClickListener {
-            showSetTimeDialog()
-        }
 
         arrayAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, lapList)
         binding.listView.adapter = arrayAdapter
@@ -78,44 +75,14 @@ class StopWatchFragment : Fragment() {
                     binding.textView3.text = "Run"
                 }
             }
-        } else {
-            // Start with selected time
-            if (pausedTime == 0L) {
-                initialBaseTime = SystemClock.elapsedRealtime() + minutes!!.toInt() * 60 * 1000L
-                binding.chronometer2.base = initialBaseTime
-            } else {
-                initialBaseTime = SystemClock.elapsedRealtime() - pausedTime
-                binding.chronometer2.base = initialBaseTime
-            }
-            binding.chronometer2.start()
-
-            binding.chronometer2.format = "%S %S "
-            binding.textView3.text = "Stop"
-
-            binding.chronometer2.setOnChronometerTickListener {
-                val elapsedtime = binding.chronometer2.base - SystemClock.elapsedRealtime()
-                if (elapsedtime <= 0) {
-                    binding.chronometer2.stop()
-                    isRunning = false
-                    binding.textView3.text = "Run"
-                }
-            }
         }
     }
 
     private fun pauseStopwatch() {
-        val elapsedtime = binding.chronometer2.base - SystemClock.elapsedRealtime()
-        if (elapsedtime >= 0) {
             binding.chronometer2.stop()
             pausedTime = SystemClock.elapsedRealtime() - binding.chronometer2.base
             isRunning = false
             binding.textView3.text = "Run"
-        }else{
-            binding.chronometer2.stop()
-            pausedTime = binding.chronometer2.base
-            isRunning = false
-            binding.textView3.text = "Run"
-        }
     }
 
     private fun resetStopwatch() {
@@ -127,32 +94,6 @@ class StopWatchFragment : Fragment() {
 
         lapList.clear()
         arrayAdapter.notifyDataSetChanged()
-    }
-
-    private fun showSetTimeDialog() : AlertDialog {
-        val dialogBinding = DialogBinding.inflate(LayoutInflater.from(context))
-
-        val numberPicker = dialogBinding.numberPicker
-        numberPicker.minValue =0
-        numberPicker.maxValue = 9
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogBinding.root)
-            .setCancelable(false)
-            .create()
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.btnback)
-
-        dialogBinding.settimebtn.setOnClickListener {
-            minutes = numberPicker.value.toString()
-            binding.clocktime.text = numberPicker.value.toString() + " mins"
-            dialog.dismiss()
-
-        }
-
-        dialog.show()
-        return dialog
-
     }
 
 }

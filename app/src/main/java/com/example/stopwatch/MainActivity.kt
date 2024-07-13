@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.stopwatch.databinding.ActivityMainBinding
 import com.example.stopwatch.fragments.StopWatchFragment
+import com.example.stopwatch.fragments.TimerFragment
 import nl.joery.animatedbottombar.AnimatedBottomBar
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val stopWatchFragment = StopWatchFragment()
+        val timerFragment = TimerFragment()
 //        val secFragment = BlankFragment3()
 
         setCurrentFragment(stopWatchFragment)
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.tab_alarm -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_weather -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_clock -> setCurrentFragment(stopWatchFragment)
-                R.id.tab_timer -> setCurrentFragment(stopWatchFragment)
+                R.id.tab_timer -> setCurrentFragment(timerFragment)
             }
 
             // Remove the badge from the selected tab
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomBar.post {
             // Adding badges to specific tabs
-            binding.bottomBar.setBadgeAtTabIndex(1, AnimatedBottomBar.Badge("99"))
+            binding.bottomBar.setBadgeAtTabIndex(0, AnimatedBottomBar.Badge("99"))
             binding.bottomBar.setBadgeAtTabIndex(4, AnimatedBottomBar.Badge("5"))
         }
 

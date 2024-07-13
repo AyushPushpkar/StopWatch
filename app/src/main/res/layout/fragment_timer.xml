@@ -16,52 +16,72 @@
             android:layout_height="wrap_content"
             android:background="@drawable/backmain">
 
+            <ImageView
+                android:id="@+id/clockwhitebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/stopwatchiconanimation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/clocktime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="92dp"
+                android:fontFamily="monospace"
+                android:text="00:00:00"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/clockwhitebtn"
+                app:layout_constraintStart_toStartOf="@+id/clockwhitebtn"
+                app:layout_constraintTop_toTopOf="@+id/clockwhitebtn" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="8dp"
+                android:background="#E91E63"
+                android:backgroundTint="#E91E63"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clockwhitebtn" />
+
 
             <ImageView
                 android:id="@+id/runbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:src="@drawable/radial_watch"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-black"
-                android:text="Run"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/runbtn"
-                app:layout_constraintEnd_toEndOf="@+id/runbtn"
-                app:layout_constraintStart_toStartOf="@+id/runbtn"
-                app:layout_constraintTop_toTopOf="@+id/runbtn" />
-
+                android:layout_marginTop="8dp"
+                android:src="@drawable/steps"
+                app:layout_constraintEnd_toEndOf="@+id/view"
+                app:layout_constraintStart_toStartOf="@+id/view"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <Chronometer
                 android:id="@+id/chronometer2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:fontFamily="@font/allerta_stencil"
                 android:text="00.00.00"
                 android:textColor="@color/white"
                 android:textSize="48sp"
+                app:layout_constraintBottom_toBottomOf="@+id/runbtn"
                 app:layout_constraintEnd_toEndOf="@+id/runbtn"
+                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="@+id/runbtn"
-                app:layout_constraintTop_toBottomOf="@+id/runbtn" />
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/resetbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/btnback"
                 android:fontFamily="@font/krona_one"
@@ -71,46 +91,27 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toStartOf="@id/lapbtn"
+                app:layout_constraintEnd_toStartOf="@id/pausebtn"
                 app:layout_constraintStart_toStartOf="@+id/chronometer2"
-                app:layout_constraintTop_toBottomOf="@+id/chronometer2" />
+                app:layout_constraintTop_toBottomOf="@+id/runbtn" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/lapbtn"
+                android:id="@+id/pausebtn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/btnback"
                 android:fontFamily="@font/krona_one"
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
-                android:text=" Lap "
+                android:text=" Run "
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="@+id/chronometer2"
                 app:layout_constraintStart_toEndOf="@id/resetbtn"
-                app:layout_constraintTop_toBottomOf="@+id/chronometer2" />
-
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:cacheColorHint="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/lapbtn"
-                app:layout_constraintStart_toStartOf="@+id/resetbtn"
-                app:layout_constraintTop_toBottomOf="@+id/resetbtn" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="65dp"
-                android:layout_height="541dp"
-                app:layout_constraintEnd_toEndOf="@+id/lapbtn"
-                app:layout_constraintHorizontal_bias="0.438"
-                app:layout_constraintStart_toStartOf="@+id/resetbtn"
-                app:layout_constraintTop_toBottomOf="@+id/resetbtn"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@+id/runbtn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
