@@ -1,5 +1,10 @@
 package com.example.stopwatch.fragments
 
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +16,9 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity.NOTIFICATION_SERVICE
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.stopwatch.R
 import com.example.stopwatch.databinding.DialogBinding
 import com.example.stopwatch.databinding.FragmentStopwatchBinding
@@ -76,10 +84,12 @@ class TimerFragment : Fragment() {
             val minutes = - TimeUnit.MILLISECONDS.toMinutes(elapsedRealtime)
             val seconds =  -TimeUnit.MILLISECONDS.toSeconds(elapsedRealtime) % 60
             val milliseconds = -(elapsedRealtime % 1000) / 10
-            binding.chronometer2.text = String.format("%02d:%02d:%02d", minutes, seconds, milliseconds)
+            binding.chronometer2.text = String.format("%02d:%02d.%02d", minutes, seconds, milliseconds)
 
             if (minutes <= 0 && seconds <= 0 && milliseconds <= 0) {
                 resetStopwatch()
+                showNotification()
+
             } else if (isRunning) {
                 handler.postDelayed(this, updateInterval)
             }
@@ -99,10 +109,35 @@ class TimerFragment : Fragment() {
         initialBaseTime = 0
         minutes = "00"
         handler.removeCallbacks(updateChronometer)
-        binding.chronometer2.text = "00:00:00"
+        binding.chronometer2.text = "00:00.00"
         binding.pausebtn.text = " Run "
         binding.clocktime.text = "00:00:00"
 
+    }
+
+    private fun showNotification(){
+        val notification = NotificationCompat.Builder(requireContext(),com.example.stopwatch.fragments.NotificationManager().CHANNEL_ID1)
+
+        val intent = Intent(requireContext(),TimerFragment::class.java)
+
+        val pendingIntent = PendingIntent.getActivity(requireContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        notification.setContentTitle("Timer")
+        notification.setContentText("/nTime's Up !")
+        notification.setSmallIcon(R.drawable.timerred)
+        notification.setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setColor(Color.RED)
+            .setContentIntent(pendingIntent)
+            .addAction(R.drawable.timerred,"Back",pendingIntent)
+            .addAction(R.drawable.timerred,"Play",pendingIntent)
+            .addAction(R.drawable.timerred,"Next",pendingIntent)
+            .setOnlyAlertOnce(true)
+            .setAutoCancel(true)
+            .build()
+
+        val manager = requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(1,notification.build())
     }
 
     private fun showSetTimeDialog() : AlertDialog {
