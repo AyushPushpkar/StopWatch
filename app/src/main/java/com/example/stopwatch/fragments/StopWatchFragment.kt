@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stopwatch.R
+import com.example.stopwatch.RvAdapter
 import com.example.stopwatch.databinding.DialogBinding
 import com.example.stopwatch.databinding.FragmentStopwatchBinding
 import java.util.concurrent.TimeUnit
@@ -21,11 +23,14 @@ class StopWatchFragment : Fragment() {
     private var isRunning = false
     private var startTime: Long = 0
     private var elapsedTime: Long = 0
+    private var lastLapTime: Long = 0
     private var handler = Handler(Looper.getMainLooper())
     private val updateInterval = 50L
 
-    var lapList = ArrayList<String>()
-    private lateinit var arrayAdapter: ArrayAdapter<String>
+    private var lapNoList = ArrayList<String>()
+    private var lapTimeList = ArrayList<String>()
+    private var totalTimeList = ArrayList<String>()
+    private lateinit var lapAdapter: RvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +39,10 @@ class StopWatchFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentStopwatchBinding.inflate(inflater, container, false)
 
-
-        arrayAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, lapList)
-        binding.listView.adapter = arrayAdapter
-
+        lapAdapter = RvAdapter(requireContext(), totalTimeList, lapTimeList, lapNoList)
+        binding.recview.layoutManager = LinearLayoutManager(requireContext())
+        binding.recview.adapter = lapAdapter
+        binding.recview.visibility = View.GONE
 
         binding.runbtn.setOnClickListener {
             if (!isRunning) {
@@ -50,15 +55,35 @@ class StopWatchFragment : Fragment() {
             resetStopwatch()
         }
         binding.lapbtn.setOnClickListener {
-            if(isRunning){
-                lapList.add(binding.chronometer2.text.toString())
-                arrayAdapter.notifyDataSetChanged()
+            if (isRunning) {
+                recordLap()
             }
         }
 
 
         return binding.root
 
+    }
+
+    private fun recordLap() {
+        val currentTime = SystemClock.elapsedRealtime()
+        val totalTime = currentTime - startTime
+
+        val lapTime = if (lapNoList.isEmpty()) {
+            totalTime
+        } else {
+            currentTime - lastLapTime
+        }
+
+        lapNoList.add(0, "Lap ${lapNoList.size + 1}")
+        lapTimeList.add(0, formatTime(lapTime))
+        totalTimeList.add(0, formatTime(totalTime))
+        lastLapTime = currentTime
+
+        lapAdapter.notifyDataSetChanged()
+
+        // Set RecyclerView visibility to VISIBLE when a lap is recorded
+        binding.recview.visibility = View.VISIBLE
     }
 
     private fun startStopwatch() {
@@ -81,8 +106,12 @@ class StopWatchFragment : Fragment() {
         elapsedTime = 0
         binding.textView3.text = "Run"
 
-        lapList.clear()
-        arrayAdapter.notifyDataSetChanged()
+        lapNoList.clear()
+        lapTimeList.clear()
+        totalTimeList.clear()
+        lapAdapter.notifyDataSetChanged()
+
+        binding.recview.visibility =  View.GONE
     }
 
     private val runnable: Runnable = object : Runnable {

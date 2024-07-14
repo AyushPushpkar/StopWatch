@@ -51,4 +51,7 @@ dependencies {
 
     //animated bottom navigation
     implementation ("nl.joery.animatedbottombar:library:1.1.0")
+
+    //circle image
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }

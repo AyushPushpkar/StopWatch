@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             when (it.id) {
                 R.id.tab_stopwatch -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_alarm -> setCurrentFragment(stopWatchFragment)
-                R.id.tab_weather -> setCurrentFragment(stopWatchFragment)
+                R.id.tab_weather -> setCurrentFragment(timerFragment)
                 R.id.tab_clock -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_timer -> setCurrentFragment(timerFragment)
             }
