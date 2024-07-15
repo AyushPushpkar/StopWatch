@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,6 +68,8 @@ class StopWatchFragment : Fragment() {
             }
         }
 
+        rotateRunButton()
+
 
         return binding.root
 
@@ -96,12 +100,14 @@ class StopWatchFragment : Fragment() {
         isRunning = true
         startTime = SystemClock.elapsedRealtime() - elapsedTime
         handler.postDelayed(runnable, updateInterval)
+        rotateRunButton()
         binding.textView3.text = "Pause"
     }
 
     private fun pauseStopwatch() {
         isRunning = false
         handler.removeCallbacks(runnable)
+        rotateRunButton()
         binding.textView3.text = "Resume"
     }
 
@@ -110,6 +116,7 @@ class StopWatchFragment : Fragment() {
         handler.removeCallbacks(runnable)
         binding.chronometer2.text = "00:00.00"
         elapsedTime = 0
+        rotateRunButton()
         binding.textView3.text = "Run"
 
         lapNoList.clear()
@@ -133,6 +140,19 @@ class StopWatchFragment : Fragment() {
         val seconds = TimeUnit.MILLISECONDS.toSeconds(time) % 60
         val milliseconds = time % 1000 / 10
         return String.format("%02d:%02d.%02d", minutes, seconds, milliseconds)
+    }
+
+    private fun rotateRunButton() {
+        // Initialize run button
+        var runButton = binding.runbtn
+
+        // Rotate animation setup
+        val rotateAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+        rotateAnimation.duration = 600 // Set your desired duration here
+        rotateAnimation.fillAfter = true // Keeps the final position after animation ends
+
+        // Apply animation to the run button
+        runButton.startAnimation(rotateAnimation)
     }
 
 }

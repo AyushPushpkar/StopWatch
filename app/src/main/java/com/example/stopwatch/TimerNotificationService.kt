@@ -17,7 +17,7 @@ class TimerNotificationService : Service() {
     }
 
     private fun showNotification() {
-        val notification = NotificationCompat.Builder(this, (application as NotificationManager).CHANNEL_ID1)
+        val notification = NotificationCompat.Builder(this, (application as MyNotificationManager).CHANNEL_ID1)
 
         // Customize your notification content
         notification.setContentTitle("Timer")

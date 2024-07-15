@@ -5,7 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 
-class NotificationManager : Application() {
+class MyNotificationManager : Application() {
 
      val CHANNEL_ID1 = "CHANNEL_ID1"
      val CHANNEL_ID2 = "CHANNEL_ID2"
