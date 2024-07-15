@@ -54,4 +54,6 @@ dependencies {
 
     //circle image
     implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.github.otmaneTheDev:NeumorphismClock:1.0")
+
 }

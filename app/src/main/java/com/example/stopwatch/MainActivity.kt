@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.stopwatch.databinding.ActivityMainBinding
+import com.example.stopwatch.fragments.ClockFragment
 import com.example.stopwatch.fragments.StopWatchFragment
 import com.example.stopwatch.fragments.TimerFragment
 import nl.joery.animatedbottombar.AnimatedBottomBar
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         val stopWatchFragment = StopWatchFragment()
         val timerFragment = TimerFragment()
+        val clockFragment = ClockFragment()
 //        val secFragment = BlankFragment3()
 
         setCurrentFragment(stopWatchFragment)
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.tab_stopwatch -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_alarm -> setCurrentFragment(stopWatchFragment)
                 R.id.tab_weather -> setCurrentFragment(timerFragment)
-                R.id.tab_clock -> setCurrentFragment(stopWatchFragment)
+                R.id.tab_clock -> setCurrentFragment(clockFragment)
                 R.id.tab_timer -> setCurrentFragment(timerFragment)
             }
 

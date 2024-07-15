@@ -42,7 +42,13 @@ class StopWatchFragment : Fragment() {
         lapAdapter = RvAdapter(requireContext(), totalTimeList, lapTimeList, lapNoList)
         binding.recview.layoutManager = LinearLayoutManager(requireContext())
         binding.recview.adapter = lapAdapter
-        binding.recview.visibility = View.GONE
+
+        // Check if lap lists are not empty and set RecyclerView visibility accordingly
+        if (lapNoList.isNotEmpty()) {
+            binding.recview.visibility = View.VISIBLE
+        } else {
+            binding.recview.visibility = View.GONE
+        }
 
         binding.runbtn.setOnClickListener {
             if (!isRunning) {

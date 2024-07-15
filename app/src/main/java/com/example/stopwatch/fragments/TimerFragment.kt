@@ -2,7 +2,6 @@ package com.example.stopwatch.fragments
 
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -13,15 +12,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.NOTIFICATION_SERVICE
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.stopwatch.R
 import com.example.stopwatch.databinding.DialogBinding
-import com.example.stopwatch.databinding.FragmentStopwatchBinding
 import com.example.stopwatch.databinding.FragmentTimerBinding
 import java.util.concurrent.TimeUnit
 
@@ -119,7 +115,8 @@ class TimerFragment : Fragment() {
     }
 
     private fun showNotification(){
-        val notification = NotificationCompat.Builder(requireContext(),com.example.stopwatch.fragments.NotificationManager().CHANNEL_ID1)
+        val notification = NotificationCompat.Builder(requireContext(),
+            com.example.stopwatch.NotificationManager().CHANNEL_ID1)
 
         val intent = Intent(requireContext(),TimerFragment::class.java)
 
@@ -132,9 +129,6 @@ class TimerFragment : Fragment() {
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setColor(Color.RED)
             .setContentIntent(pendingIntent)
-            .addAction(R.drawable.timerred,"Back",pendingIntent)
-            .addAction(R.drawable.timerred,"Play",pendingIntent)
-            .addAction(R.drawable.timerred,"Next",pendingIntent)
             .setOnlyAlertOnce(true)
             .setAutoCancel(true)
             .build()
