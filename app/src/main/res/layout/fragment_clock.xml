@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ClockFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/backmain">
+
+        <TextClock
+            android:id="@+id/digitalclock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="112dp"
+            android:format12Hour="hh:mm:ss"
+            android:text="00:00:00"
+            android:textColor="#FB134A"
+            android:textSize="85sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.19"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
+        <TextClock
+            android:id="@+id/format"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="a"
+            android:text="00:00:00"
+            android:textColor="@color/tint"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@+id/digitalclock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/digitalclock"
+            app:layout_constraintTop_toTopOf="@+id/digitalclock"
+            app:layout_constraintVertical_bias="0.755" />
+
+        <TextClock
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:format12Hour="MMMM dd , yyyy"
+            android:text="00:00:00"
+            android:textColor="@color/tint"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="@+id/format"
+            app:layout_constraintHorizontal_bias="0.614"
+            app:layout_constraintStart_toStartOf="@+id/digitalclock"
+            app:layout_constraintTop_toBottomOf="@+id/digitalclock" />
+
+        <TextClock
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:format12Hour="EEEE"
+            android:text="00:00:00"
+            android:textColor="@color/tint"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/digitalclock"
+            app:layout_constraintEnd_toEndOf="@+id/digitalclock"
+            app:layout_constraintHorizontal_bias="0.071"
+            app:layout_constraintStart_toStartOf="@+id/digitalclock" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/customclock"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
+                android:src="@drawable/testclock" />
+
+            <ImageView
+                android:id="@+id/hourtick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="75dp"
+                android:src="@drawable/hourhand" />
+
+            <ImageView
+                android:id="@+id/mintick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="55dp"
+                android:src="@drawable/minhand" />
+
+            <ImageView
+                android:id="@+id/sectick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="35dp"
+                android:src="@drawable/sechand" />
+
+            <ImageView
+                android:id="@+id/smallcircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/smallcirclered" />
+
+
+        </RelativeLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
