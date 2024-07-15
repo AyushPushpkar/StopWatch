@@ -49,10 +49,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        binding.bottomBar.onTabReselected = {
-            // Handle tab reselection if needed
-        }
-
         binding.bottomBar.post {
             // Adding badges to specific tabs
             binding.bottomBar.setBadgeAtTabIndex(1, AnimatedBottomBar.Badge("99"))

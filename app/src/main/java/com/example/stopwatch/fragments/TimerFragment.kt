@@ -16,7 +16,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.NOTIFICATION_SERVICE
 import androidx.core.app.NotificationCompat
+import com.example.stopwatch.MainActivity
 import com.example.stopwatch.R
+import com.example.stopwatch.TimerNotificationService
 import com.example.stopwatch.databinding.DialogBinding
 import com.example.stopwatch.databinding.FragmentTimerBinding
 import java.util.concurrent.TimeUnit
@@ -87,7 +89,7 @@ class TimerFragment : Fragment() {
 
             if (minutes <= 0 && seconds <= 0 && milliseconds <= 0) {
                 resetStopwatch()
-                showNotification()
+//                showNotification()
 
             } else if (isRunning) {
                 handler.postDelayed(this, updateInterval)
@@ -114,28 +116,11 @@ class TimerFragment : Fragment() {
 
     }
 
-    private fun showNotification(){
-        val notification = NotificationCompat.Builder(requireContext(),
-            com.example.stopwatch.NotificationManager().CHANNEL_ID1)
-
-        val intent = Intent(requireContext(),TimerFragment::class.java)
-
-        val pendingIntent = PendingIntent.getActivity(requireContext(),0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        notification.setContentTitle("Timer")
-        notification.setContentText("Time's Up !")
-        notification.setSmallIcon(R.drawable.timerred)
-        notification.setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-            .setColor(Color.RED)
-            .setContentIntent(pendingIntent)
-            .setOnlyAlertOnce(true)
-            .setAutoCancel(true)
-            .build()
-
-        val manager = requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(1,notification.build())
+    private fun showNotification() {
+        val intent = Intent(requireContext(), TimerNotificationService::class.java)
+        requireContext().startService(intent)
     }
+
 
     private fun showSetTimeDialog() : AlertDialog {
         val dialogBinding = DialogBinding.inflate(LayoutInflater.from(context))

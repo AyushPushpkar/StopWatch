@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
 import com.example.stopwatch.databinding.FragmentClockBinding
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,20 +31,23 @@ class ClockFragment : Fragment() {
         binding = FragmentClockBinding.inflate(inflater, container, false)
 
         val digitalFont = Typeface.createFromAsset(requireContext().assets, "fonts/digital.ttf")
-
-//        binding.date.typeface = digitalFont
-//        binding.format.typeface = digitalFont
         binding.digitalclock.typeface = digitalFont
 
         timeFormat = SimpleDateFormat("HH:mm:ss" , Locale.getDefault())
-        handler.post(object : Runnable {
-            override fun run() {
-                updateUI()
-                handler.postDelayed(this, 1000)
-            }
-        })
+        startClockUpdate()
 
         return binding.root
+    }
+
+    private fun startClockUpdate(){
+        handler.post(object : Runnable {
+            override fun run() {
+                if (isAdded) { // Check if fragment is attached
+                    updateUI()
+                    handler.postDelayed(this, 1000)
+                }
+            }
+        })
     }
 
     private fun updateUI() {
@@ -51,51 +57,52 @@ class ClockFragment : Fragment() {
         var min = formattime.substring(3,5).toInt()
         var sec = formattime.substring(6).toInt()
 
-        rotateimagewithshift(binding.hourtick,tomap(hr,12),0.5f,1.0f)
-        rotateimagewithshift(binding.mintick,tomap(min,60),0.5f,1.0f)
-        rotateimagewithshift(binding.sectick,tomap(sec,60),0.5f,1.0f)
+        // Calculate the angles for hour, minute, and second hands
+        val hourAngle = ((hr % 12) + min / 60f + sec / 3600f) * 30f // 360/12 = 30 degrees per hour
+        val minuteAngle = (min + sec / 60f) * 6f // 360/60 = 6 degrees per minute
+        val secondAngle = sec * 6f // 360/60 = 6 degrees per second
+
+        rotateimagewithshift(binding.hourtick,hourAngle,0.5f,1.0f)
+        rotateimagewithshift(binding.mintick,minuteAngle,0.5f,1.0f)
+        rotateimagewithshift(binding.sectick,secondAngle,0.5f,1.0f)
     }
 
     private fun rotateimagewithshift(imageView: ImageView, angle : Float, pivotxvalue : Float, pivotyvalue : Float) {
 
-//        imageView.pivotX =  imageView.width*pivotxvalue
-//        imageView.pivotY =  imageView.height*pivotyvalue
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (isAdded) { // Check if fragment is added to the activity
+                // Convert 10dp to pixels
+                val pivotOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics)
+                imageView.pivotX = imageView.width * pivotxvalue
+                imageView.pivotY = (imageView.height - pivotOffset) * pivotyvalue
 
-        // Convert 10dp to pixels
-        val pivotOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics)
 
-        // Set pivot to the center of the custom clock plus the offset
+                // Calculate current rotation
+                val currentRotation = imageView.rotation % 360
 
-        imageView.pivotX = imageView.width * pivotxvalue
-        imageView.pivotY = (imageView.height - pivotOffset) * pivotyvalue
+                // Calculate desired rotation
+                var desiredRotation = angle
+                if (desiredRotation < 0) {
+                    desiredRotation += 360 // Ensure positive angle for correct rotation
+                }
 
-        // Calculate current rotation
-        val currentRotation = imageView.rotation % 360
+                // Determine the shortest path to rotate (clockwise or counterclockwise)
+                var rotationDirection = desiredRotation - currentRotation
+                if (rotationDirection > 180) {
+                    rotationDirection -= 360
+                } else if (rotationDirection < -180) {
+                    rotationDirection += 360
+                }
 
-        // Calculate desired rotation
-        var desiredRotation = angle
-        if (desiredRotation < 0) {
-            desiredRotation += 360 // Ensure positive angle for correct rotation
+                // Animate rotation
+                imageView.animate()
+                    .rotationBy(rotationDirection)
+                    .setInterpolator(LinearInterpolator()) // Use linear interpolator for smooth animation
+                    .setDuration(500) // Adjust duration to be closer to 1 second for smoother updates
+                    .start()
+            }
         }
 
-        // Determine the shortest path to rotate (clockwise or counterclockwise)
-        var rotationDirection = desiredRotation - currentRotation
-        if (rotationDirection > 180) {
-            rotationDirection -= 360
-        } else if (rotationDirection < -180) {
-            rotationDirection += 360
-        }
-
-        // Animate rotation
-        imageView.animate()
-            .rotationBy(rotationDirection)
-            .setDuration(500) // Adjust duration as needed for smoother animation
-            .start()
-
-    }
-
-    private fun tomap(value :Int , max : Int) : Float{
-        return (value%max).toFloat()/max*360f
     }
 
 
