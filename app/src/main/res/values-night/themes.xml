@@ -9,4 +9,12 @@
         <item name="itemIconTint">@color/red</item>
         <item name="itemTextColor">@color/red</item>
     </style>
+
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="searchHintIcon">@drawable/search</item>
+        <item name="searchIcon">@drawable/search</item>
+        <item name="android:textColor">@color/tint</item>
+        <item name="android:textColorHint">#FAD6DE</item>
+    </style>
 </resources>

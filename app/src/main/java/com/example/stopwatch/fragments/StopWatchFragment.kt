@@ -34,6 +34,8 @@ class StopWatchFragment : Fragment() {
     private var totalTimeList = ArrayList<String>()
     private lateinit var lapAdapter: RvAdapter
 
+    private var resetAnimationPerformed = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -68,8 +70,6 @@ class StopWatchFragment : Fragment() {
             }
         }
 
-        rotateRunButton()
-
 
         return binding.root
 
@@ -102,6 +102,7 @@ class StopWatchFragment : Fragment() {
         handler.postDelayed(runnable, updateInterval)
         rotateRunButton()
         binding.textView3.text = "Pause"
+        resetAnimationPerformed = false
     }
 
     private fun pauseStopwatch() {
@@ -112,11 +113,15 @@ class StopWatchFragment : Fragment() {
     }
 
     private fun resetStopwatch() {
+        if (!resetAnimationPerformed) {
+            rotateRunButton()
+            resetAnimationPerformed = true
+        }
+
         isRunning = false
         handler.removeCallbacks(runnable)
         binding.chronometer2.text = "00:00.00"
         elapsedTime = 0
-        rotateRunButton()
         binding.textView3.text = "Run"
 
         lapNoList.clear()
@@ -148,7 +153,7 @@ class StopWatchFragment : Fragment() {
 
         // Rotate animation setup
         val rotateAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-        rotateAnimation.duration = 600 // Set your desired duration here
+        rotateAnimation.duration = 550 // Set your desired duration here
         rotateAnimation.fillAfter = true // Keeps the final position after animation ends
 
         // Apply animation to the run button

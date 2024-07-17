@@ -47,19 +47,19 @@ class TimerFragment : Fragment() {
 
         binding.pausebtn.setOnClickListener {
             if (!isRunning) {
-                startStopwatch()
+                startTimer()
             } else {
-                pauseStopwatch()
+                pauseTimer()
             }
         }
         binding.resetbtn.setOnClickListener {
-            resetStopwatch()
+            resetTimer()
         }
 
         return binding.root
     }
 
-    private fun startStopwatch() {
+    private fun startTimer() {
         if (minutes == "00" || minutes == null) {
             Toast.makeText(requireContext(), "Please set a valid time before running", Toast.LENGTH_SHORT).show()
             return
@@ -89,7 +89,7 @@ class TimerFragment : Fragment() {
             binding.chronometer2.text = String.format("%02d:%02d.%02d", minutes, seconds, milliseconds)
 
             if (minutes <= 0 && seconds <= 0 && milliseconds <= 0) {
-                resetStopwatch()
+                resetTimer()
                 showNotification()
 
             } else if (isRunning) {
@@ -98,14 +98,14 @@ class TimerFragment : Fragment() {
         }
     }
 
-    private fun pauseStopwatch() {
+    private fun pauseTimer() {
         isRunning = false
         pausedTime = SystemClock.elapsedRealtime() - initialBaseTime
         handler.removeCallbacks(updateChronometer)
         binding.pausebtn.text = " Run "
     }
 
-    private fun resetStopwatch() {
+    private fun resetTimer() {
         isRunning = false
         pausedTime = 0
         initialBaseTime = 0
@@ -160,7 +160,11 @@ class TimerFragment : Fragment() {
 
         dialogBinding.settimebtn.setOnClickListener {
             minutes = numberPicker.value.toString()
-            binding.clocktime.text = numberPicker.value.toString() + " mins"
+            if(numberPicker.value == 1){
+                binding.clocktime.text = minutes + " min"
+            }else {
+                binding.clocktime.text = numberPicker.value.toString() + " mins"
+            }
             dialog.dismiss()
 
         }

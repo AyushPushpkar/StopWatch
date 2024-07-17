@@ -55,5 +55,10 @@ dependencies {
     //circle image
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.github.otmaneTheDev:NeumorphismClock:1.0")
+    implementation("com.airbnb.android:lottie:6.4.1")
+    // GSON converter
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+// retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
 
 }
