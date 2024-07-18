@@ -48,14 +48,14 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Remove the badge from the selected tab
-            binding.bottomBar.clearBadgeAtTab(it)
+//            binding.bottomBar.clearBadgeAtTab(it)
 
         }
 
         binding.bottomBar.post {
             // Adding badges to specific tabs
-            binding.bottomBar.setBadgeAtTabIndex(1, AnimatedBottomBar.Badge("99"))
-            binding.bottomBar.setBadgeAtTabIndex(4, AnimatedBottomBar.Badge("5"))
+//            binding.bottomBar.setBadgeAtTabIndex(1, AnimatedBottomBar.Badge("99"))
+//            binding.bottomBar.setBadgeAtTabIndex(4, AnimatedBottomBar.Badge("5"))
         }
 
     }

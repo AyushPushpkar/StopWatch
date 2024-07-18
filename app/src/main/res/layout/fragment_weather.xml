@@ -48,10 +48,10 @@
             android:id="@+id/animation_view"
             android:layout_width="155dp"
             android:layout_height="155dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="28dp"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.062"
+            app:layout_constraintHorizontal_bias="0.105"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cityname"
             app:lottie_autoPlay="true"
@@ -81,9 +81,9 @@
             android:fontFamily="@font/aclonica"
             android:text="Sunny"
             android:textAllCaps="true"
-            android:textColor="@color/white"
+            android:textColor="#FB135C"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/temp"
+            app:layout_constraintEnd_toEndOf="@+id/temp2"
             app:layout_constraintStart_toStartOf="@+id/animation_view"
             app:layout_constraintTop_toTopOf="@+id/animation_view" />
 
@@ -98,7 +98,8 @@
             app:layout_constraintBottom_toTopOf="@id/weatherframe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/animation_view" />
+            app:layout_constraintTop_toBottomOf="@+id/animation_view"
+            app:layout_constraintVertical_bias="0.453" />
 
         <TextView
             android:id="@+id/mintemp"
@@ -372,11 +373,9 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/temp"
+            android:id="@+id/temp2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginTop="20dp"
             android:drawableRight="@drawable/centigrade"
             android:drawablePadding="2dp"
             android:fontFamily="@font/merriweathersans_semibold"
@@ -385,9 +384,10 @@
             android:textColor="#FB135C"
             android:textSize="80sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.53"
+            app:layout_constraintHorizontal_bias="0.506"
             app:layout_constraintStart_toEndOf="@+id/animation_view"
             app:layout_constraintTop_toBottomOf="@+id/cityname" />
+        " />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
