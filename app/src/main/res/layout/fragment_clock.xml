@@ -54,6 +54,7 @@
             app:layout_constraintStart_toStartOf="@+id/digitalclock"
             app:layout_constraintTop_toBottomOf="@+id/digitalclock" />
 
+
         <TextClock
             android:id="@+id/day"
             android:layout_width="wrap_content"

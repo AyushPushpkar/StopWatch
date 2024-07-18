@@ -67,8 +67,8 @@
             android:drawablePadding="15dp"
             android:fontFamily="@font/merriweathersans_medium"
             android:text=""
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:textColor="#E91E63"
             app:layout_constraintEnd_toEndOf="@+id/searchcard"
             app:layout_constraintStart_toStartOf="@+id/searchcard"
             app:layout_constraintTop_toBottomOf="@+id/searchcard" />
@@ -83,7 +83,7 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/animation_view"
+            app:layout_constraintEnd_toEndOf="@+id/temp"
             app:layout_constraintStart_toStartOf="@+id/animation_view"
             app:layout_constraintTop_toTopOf="@+id/animation_view" />
 
@@ -91,7 +91,6 @@
             android:id="@+id/maxtemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:fontFamily="@font/merriweathersans_regular"
             android:text="Max : 00:00 °C"
             android:textColor="#E91E63"
@@ -99,8 +98,7 @@
             app:layout_constraintBottom_toTopOf="@id/weatherframe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            app:layout_constraintVertical_bias="0.066" />
+            app:layout_constraintTop_toBottomOf="@+id/animation_view" />
 
         <TextView
             android:id="@+id/mintemp"
@@ -373,52 +371,23 @@
 
         </FrameLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+        <TextView
+            android:id="@+id/temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/tempback"
-            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/centigrade"
+            android:drawablePadding="2dp"
+            android:fontFamily="@font/merriweathersans_semibold"
+            android:padding="10dp"
+            android:text="00"
+            android:textColor="#FB135C"
+            android:textSize="80sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintHorizontal_bias="0.53"
             app:layout_constraintStart_toEndOf="@+id/animation_view"
-            app:layout_constraintTop_toBottomOf="@+id/cityname">
-
-            <TextView
-                android:id="@+id/temp"
-                android:layout_width="100dp"
-                android:layout_height="110dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/frameunitback"
-                android:drawableRight="@drawable/centigrade"
-                android:drawablePadding="2dp"
-                android:fontFamily="@font/merriweathersans_semibold"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="00"
-                android:textColor="@color/tint"
-                android:textSize="40sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:fontFamily="@font/merriweathersans_bold"
-                android:text="Today"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/temp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/cityname" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
