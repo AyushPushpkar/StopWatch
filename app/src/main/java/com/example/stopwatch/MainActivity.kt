@@ -1,5 +1,6 @@
 package com.example.stopwatch
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +58,8 @@ class MainActivity : AppCompatActivity() {
 //            binding.bottomBar.setBadgeAtTabIndex(1, AnimatedBottomBar.Badge("99"))
 //            binding.bottomBar.setBadgeAtTabIndex(4, AnimatedBottomBar.Badge("5"))
         }
+
+//        window.statusBarColor = Color.parseColor("#F1184B")
 
     }
 

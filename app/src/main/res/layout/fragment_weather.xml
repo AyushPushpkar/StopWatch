@@ -45,9 +45,9 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animation_view"
-            android:layout_width="155dp"
-            android:layout_height="155dp"
-            android:layout_marginTop="56dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="54dp"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.117"
@@ -77,14 +77,14 @@
             android:id="@+id/temp2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="46dp"
             android:drawableRight="@drawable/centigrade"
             android:drawablePadding="2dp"
             android:fontFamily="@font/merriweathersans_semibold"
             android:padding="10dp"
             android:text="00"
             android:textColor="#FB135C"
-            android:textSize="90sp"
+            android:textSize="80sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.462"
             app:layout_constraintStart_toEndOf="@+id/animation_view"
@@ -94,7 +94,7 @@
             android:id="@+id/tvweather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="148dp"
+            android:layout_marginTop="124dp"
             android:layout_marginEnd="35dp"
             android:fontFamily="@font/aclonica"
             android:text="Sunny"
@@ -102,7 +102,7 @@
             android:textColor="#FB135C"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.465"
+            app:layout_constraintHorizontal_bias="0.445"
             app:layout_constraintStart_toStartOf="@+id/temp2"
             app:layout_constraintTop_toTopOf="@+id/temp2" />
 
@@ -110,6 +110,7 @@
             android:id="@+id/maxtemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:fontFamily="@font/merriweathersans_regular"
             android:text="Max : 00:00 °C"
             android:textColor="#E91E63"
@@ -139,6 +140,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="12dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/frameback"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -163,8 +165,8 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
-                    android:layout_width="80dp"
-                    android:layout_height="88dp"
+                    android:layout_width="82dp"
+                    android:layout_height="95dp"
                     android:layout_marginStart="48dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/frameunitback"
@@ -190,7 +192,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
                         android:text="Humidity"
@@ -200,8 +202,8 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout2"
-                    android:layout_width="80dp"
-                    android:layout_height="88dp"
+                    android:layout_width="82dp"
+                    android:layout_height="95dp"
                     android:layout_marginStart="48dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/frameunitback"
@@ -228,7 +230,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
                         android:text="Wind Speed"
@@ -238,8 +240,8 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout3"
-                    android:layout_width="80dp"
-                    android:layout_height="88dp"
+                    android:layout_width="82dp"
+                    android:layout_height="95dp"
                     android:layout_marginStart="48dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/frameunitback"
@@ -266,7 +268,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
                         android:text="Condition"
@@ -276,8 +278,8 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout4"
-                    android:layout_width="80dp"
-                    android:layout_height="88dp"
+                    android:layout_width="82dp"
+                    android:layout_height="95dp"
                     android:layout_marginStart="48dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/frameunitback"
@@ -303,7 +305,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
                         android:text="Sunrise"
@@ -313,8 +315,8 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout5"
-                    android:layout_width="80dp"
-                    android:layout_height="88dp"
+                    android:layout_width="82dp"
+                    android:layout_height="95dp"
                     android:layout_marginStart="48dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/frameunitback"
@@ -340,7 +342,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
                         android:text="Sunset"
@@ -351,8 +353,8 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout6"
-                    android:layout_width="80dp"
-                    android:layout_height="88dp"
+                    android:layout_width="82dp"
+                    android:layout_height="95dp"
                     android:layout_marginStart="48dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/frameunitback"
@@ -379,7 +381,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
                         android:text="Sea Level"

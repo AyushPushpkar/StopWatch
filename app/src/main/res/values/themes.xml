@@ -10,7 +10,18 @@
         <item name="itemTextColor">@color/red</item>
     </style>
 
-    <style name="Theme.StopWatch" parent="Base.Theme.StopWatch" />
+    <style name="Theme.StopWatch" parent="Theme.Material3.DayNight.NoActionBar" >
+
+        <item name="colorPrimary">@color/tint</item>
+        <item name="colorPrimaryVariant">@color/tint</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/betterorange</item>
+        <item name="colorSecondaryVariant">@color/betterrose</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
 
     <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
         <item name="queryBackground">@android:color/transparent</item>
