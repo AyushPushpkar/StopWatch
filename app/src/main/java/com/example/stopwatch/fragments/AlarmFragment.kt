@@ -137,7 +137,7 @@ class AlarmFragment : Fragment() {
         alarms.add(alarm)
         alarms.sortBy { it.hour * 60 + it.minute } // Sort after adding
         saveAlarms()
-        adapter.notifyItemInserted(alarms.size - 1)
+        adapter.notifyDataSetChanged() // Force a complete refresh
     }
 
     private fun updateAlarm(alarm: Alarm) {
