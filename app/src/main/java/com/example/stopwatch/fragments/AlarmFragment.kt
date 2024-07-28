@@ -6,8 +6,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.audiofx.Equalizer
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,16 +25,19 @@ import com.example.stopwatch.AlarmReceiver
 import com.example.stopwatch.databinding.FragmentAlarmBinding
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.Calendar
-
 
 class AlarmFragment : Fragment() {
 
     private lateinit var binding: FragmentAlarmBinding
     private lateinit var calendar: Calendar
     private val sharedPreferences by lazy {
-        requireContext().getSharedPreferences("AlarmPreferences", Context.MODE_PRIVATE)
+        requireContext().getSharedPreferences("AlarmSharedPreferences", Context.MODE_PRIVATE)
     }
+    private lateinit var adapter: AlarmAdapter
+    private val alarms: MutableList<Alarm> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,8 +52,13 @@ class AlarmFragment : Fragment() {
         // Create notification channel
         createNotificationChannel()
 
-        // Load the saved time
-        loadSavedTime()
+        // Load the saved alarms
+        alarms.addAll(loadAlarms())
+
+        // Set up RecyclerView
+        binding.recyclerViewAlarms.layoutManager = LinearLayoutManager(context)
+        adapter = AlarmAdapter(alarms, { alarm -> deleteAlarm(alarm) }, { alarm -> toggleAlarm(alarm) })
+        binding.recyclerViewAlarms.adapter = adapter
 
         // Set up listeners
         binding.imageBtnTime.setOnClickListener {
@@ -54,11 +66,15 @@ class AlarmFragment : Fragment() {
         }
 
         binding.setalarmbtn.setOnClickListener {
-            setAlarm()
-        }
-
-        binding.cancelalarmbtn.setOnClickListener {
-            cancelAlarm()
+            val alarmId = (alarms.maxByOrNull { it.id }?.id ?: 0) + 1 // Generate a new unique ID
+            val alarm = Alarm(
+                id = alarmId,
+                hour = calendar.get(Calendar.HOUR_OF_DAY),
+                minute = calendar.get(Calendar.MINUTE),
+                isActive = true
+            )
+            addAlarm(alarm)
+            setAlarm(alarm)
         }
 
         return binding.root
@@ -88,40 +104,77 @@ class AlarmFragment : Fragment() {
             calendar.set(Calendar.MINUTE, minute)
             calendar.set(Calendar.SECOND, 0)
             calendar.set(Calendar.MILLISECOND, 0)
-
-            // Save the selected time
-            saveTime(hour, minute)
         }
     }
 
-    private fun saveTime(hour: Int, minute: Int) {
-        with(sharedPreferences.edit()) {
-            putInt("hour", hour)
-            putInt("minute", minute)
-            apply()
-        }
+    private fun saveAlarms() {
+        val gson = Gson()
+        val json = gson.toJson(alarms)
+        sharedPreferences.edit().putString("alarms", json).apply()
     }
 
-    private fun loadSavedTime() {
-        val hour = sharedPreferences.getInt("hour", 12)
-        val minute = sharedPreferences.getInt("minute", 0)
-        val formattedTime = if (hour > 12) {
-            String.format("%02d:%02d PM", hour - 12, minute)
+    private fun loadAlarms(): List<Alarm> {
+        alarms.clear() // Clear the existing alarms to avoid duplicates
+        val gson = Gson()
+        val json = sharedPreferences.getString("alarms", null)
+        val type = object : TypeToken<List<Alarm>>() {}.type
+        return if (json == null) {
+            emptyList()
         } else {
-            String.format("%02d:%02d AM", hour, minute)
+            gson.fromJson(json, type)
         }
-        binding.selectTime.text = formattedTime
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
     }
 
-    private fun setAlarm() {
+    private fun addAlarm(alarm: Alarm) {
+        alarms.add(alarm)
+        saveAlarms()
+        adapter.notifyItemInserted(alarms.size - 1)
+    }
+
+    private fun updateAlarm(alarm: Alarm) {
+        val index = alarms.indexOfFirst { it.id == alarm.id }
+        if (index != -1) {
+            alarms[index] = alarm
+            saveAlarms()
+            // Post the update to avoid IllegalStateException
+            Handler(Looper.getMainLooper()).post {
+                adapter.notifyItemChanged(index)
+            }
+        }
+    }
+
+    private fun deleteAlarm(alarm: Alarm) {
+        val index = alarms.indexOf(alarm)
+        if (index != -1) {
+            alarms.removeAt(index)
+            saveAlarms()
+            adapter.notifyItemRemoved(index)
+            cancelAlarm(alarm)
+            Toast.makeText(requireContext(), "Alarm Deleted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun toggleAlarm(alarm: Alarm) {
+        if (alarm.isActive) {
+            setAlarm(alarm)
+        } else {
+            cancelAlarm(alarm)
+            Toast.makeText(requireContext(), "Alarm Canceled", Toast.LENGTH_SHORT).show()
+        }
+        updateAlarm(alarm)
+    }
+
+    private fun setAlarm(alarm: Alarm) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(requireContext(), AlarmReceiver::class.java).apply {
+            putExtra("alarm_id", alarm.id)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            alarm.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
@@ -133,14 +186,18 @@ class AlarmFragment : Fragment() {
         Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
     }
 
-    private fun cancelAlarm() {
+    private fun cancelAlarm(alarm: Alarm) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            alarm.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         alarmManager.cancel(pendingIntent)
 
-        Toast.makeText(requireContext(), "Alarm Canceled", Toast.LENGTH_SHORT).show()
     }
 
     private fun createNotificationChannel() {

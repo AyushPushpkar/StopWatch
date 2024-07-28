@@ -11,11 +11,11 @@ import androidx.core.app.ActivityCompat
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val alarmId = intent.getIntExtra("alarm_id", -1)
+        if (alarmId == -1) return
 
         // Check for notification permission
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, handle accordingly
-            // You might want to inform the user or request permission here
             return
         }
 
@@ -25,7 +25,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         val pendingIntent = PendingIntent.getActivity(
             context,
-            0,
+            alarmId,
             nextActivity,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -42,6 +42,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Show notification
         val notificationManagerCompat = NotificationManagerCompat.from(context)
-        notificationManagerCompat.notify(123, builder.build())  // Consider using a unique ID
+        notificationManagerCompat.notify(alarmId, builder.build())
     }
+
 }
+
+
