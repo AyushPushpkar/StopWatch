@@ -38,6 +38,7 @@ class AlarmFragment : Fragment() {
     }
     private lateinit var adapter: AlarmAdapter
     private val alarms: MutableList<Alarm> = mutableListOf()
+    private var isTimeSelected = false // Flag to check if time has been selected
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +67,11 @@ class AlarmFragment : Fragment() {
         }
 
         binding.setalarmbtn.setOnClickListener {
+            if (!isTimeSelected) {
+                Toast.makeText(requireContext(), "Please select a time first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val alarmId = (alarms.maxByOrNull { it.id }?.id ?: 0) + 1 // Generate a new unique ID
             val alarm = Alarm(
                 id = alarmId,
@@ -75,6 +81,7 @@ class AlarmFragment : Fragment() {
             )
             addAlarm(alarm)
             setAlarm(alarm)
+            isTimeSelected = false // Reset the flag after setting the alarm
         }
 
         return binding.root
@@ -104,6 +111,7 @@ class AlarmFragment : Fragment() {
             calendar.set(Calendar.MINUTE, minute)
             calendar.set(Calendar.SECOND, 0)
             calendar.set(Calendar.MILLISECOND, 0)
+            isTimeSelected = true // Set the flag to true after selecting the time
         }
     }
 
@@ -127,6 +135,7 @@ class AlarmFragment : Fragment() {
 
     private fun addAlarm(alarm: Alarm) {
         alarms.add(alarm)
+        alarms.sortBy { it.hour * 60 + it.minute } // Sort after adding
         saveAlarms()
         adapter.notifyItemInserted(alarms.size - 1)
     }
@@ -135,6 +144,7 @@ class AlarmFragment : Fragment() {
         val index = alarms.indexOfFirst { it.id == alarm.id }
         if (index != -1) {
             alarms[index] = alarm
+            alarms.sortBy { it.hour * 60 + it.minute } // Sort after adding
             saveAlarms()
             // Post the update to avoid IllegalStateException
             Handler(Looper.getMainLooper()).post {
@@ -173,7 +183,7 @@ class AlarmFragment : Fragment() {
             requireContext(),
             alarm.id,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.setInexactRepeating(

@@ -19,15 +19,14 @@
             android:id="@+id/alarmTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
+            android:layout_marginStart="40dp"
             android:layout_weight="1"
             android:text="12:00 PM"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-             />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchActive"
@@ -35,7 +34,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/alarmTime"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.521"
+            app:layout_constraintHorizontal_bias="0.454"
             app:layout_constraintStart_toEndOf="@+id/alarmTime"
             app:layout_constraintTop_toTopOf="@+id/alarmTime"
             app:thumbTint="@color/tint"
