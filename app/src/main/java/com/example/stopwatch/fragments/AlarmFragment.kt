@@ -6,17 +6,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.audiofx.Equalizer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stopwatch.Alarm
@@ -165,6 +162,7 @@ class AlarmFragment : Fragment() {
     }
 
     private fun toggleAlarm(alarm: Alarm) {
+        alarm.isActive = !alarm.isActive
         if (alarm.isActive) {
             setAlarm(alarm)
         } else {
@@ -186,9 +184,17 @@ class AlarmFragment : Fragment() {
             PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Create a separate Calendar instance for each alarm
+        val alarmTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, alarm.hour)
+            set(Calendar.MINUTE, alarm.minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
         alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
+            alarmTime.timeInMillis,
             AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
@@ -207,7 +213,6 @@ class AlarmFragment : Fragment() {
         )
 
         alarmManager.cancel(pendingIntent)
-
     }
 
     private fun createNotificationChannel() {

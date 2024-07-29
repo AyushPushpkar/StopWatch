@@ -384,7 +384,7 @@
                         android:layout_marginBottom="7dp"
                         android:fontFamily="@font/merriweathersans_medium"
                         android:gravity="center_horizontal"
-                        android:text="Sea Level"
+                        android:text="Air Pressure"
                         android:textColor="#FB134A"
                         android:textSize="10sp" />
                 </LinearLayout>
