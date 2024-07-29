@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.audiofx.Equalizer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stopwatch.Alarm
@@ -193,7 +191,7 @@ class AlarmFragment : Fragment() {
             set(Calendar.MILLISECOND, 0)
         }
 
-        if (calendar.timeInMillis < System.currentTimeMillis()) {
+        if (calendar.timeInMillis < System.currentTimeMillis()) {  // for next day
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
@@ -234,7 +232,6 @@ class AlarmFragment : Fragment() {
         startActivity(intent)
     }
 
-
     private fun cancelAlarm(alarm: Alarm) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
@@ -242,7 +239,7 @@ class AlarmFragment : Fragment() {
             requireContext(),
             alarm.id,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)

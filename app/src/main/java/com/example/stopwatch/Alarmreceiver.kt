@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         // Intent to launch NotificationActivity
-        val nextActivity = Intent(context, NotificationActivity::class.java).apply {
+        val nextActivity = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent = PendingIntent.getActivity(
