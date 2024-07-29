@@ -6,14 +6,17 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.audiofx.Equalizer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stopwatch.Alarm
@@ -162,7 +165,6 @@ class AlarmFragment : Fragment() {
     }
 
     private fun toggleAlarm(alarm: Alarm) {
-        alarm.isActive = !alarm.isActive
         if (alarm.isActive) {
             setAlarm(alarm)
         } else {
@@ -181,26 +183,57 @@ class AlarmFragment : Fragment() {
             requireContext(),
             alarm.id,
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Create a separate Calendar instance for each alarm
-        val alarmTime = Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, alarm.hour)
             set(Calendar.MINUTE, alarm.minute)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
 
-        alarmManager.setInexactRepeating(
-            AlarmManager.RTC_WAKEUP,
-            alarmTime.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
 
-        Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API level 31 and above
+            if (alarmManager.canScheduleExactAlarms()) {
+                try {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent
+                    )
+                    Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
+                } catch (e: SecurityException) {
+                    // Handle the exception if permission is not granted
+                    requestExactAlarmPermission()
+                }
+            } else {
+                // Request the exact alarm permission if not already granted
+                requestExactAlarmPermission()
+            }
+        } else { // Below API level 31
+            try {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+                Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
+            } catch (e: SecurityException) {
+                // Handle the exception if permission is not granted
+                Toast.makeText(requireContext(), "Permission denied to set exact alarms", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
+    private fun requestExactAlarmPermission() {
+        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+        startActivity(intent)
+    }
+
 
     private fun cancelAlarm(alarm: Alarm) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -213,6 +246,7 @@ class AlarmFragment : Fragment() {
         )
 
         alarmManager.cancel(pendingIntent)
+
     }
 
     private fun createNotificationChannel() {
