@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stopwatch.Alarm
@@ -32,7 +33,7 @@ class AlarmFragment : Fragment() {
     private lateinit var binding: FragmentAlarmBinding
     private lateinit var calendar: Calendar
     private val sharedPreferences by lazy {
-        requireContext().getSharedPreferences("AlarmSharedPreferences", Context.MODE_PRIVATE)
+        requireContext().getSharedPreferences("AlarmSharedPreferences2", Context.MODE_PRIVATE)
     }
     private lateinit var adapter: AlarmAdapter
     private val alarms: MutableList<Alarm> = mutableListOf()
@@ -191,42 +192,50 @@ class AlarmFragment : Fragment() {
             set(Calendar.MILLISECOND, 0)
         }
 
-        if (calendar.timeInMillis < System.currentTimeMillis()) {  // for next day
+        // If the set time has already passed for today, set it for the next day
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
+        // Handle setting the alarm with repeating behavior
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API level 31 and above
             if (alarmManager.canScheduleExactAlarms()) {
                 try {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                    )
-                    Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
+                    setRepeatingExactAlarm(alarmManager, calendar.timeInMillis, pendingIntent)
                 } catch (e: SecurityException) {
-                    // Handle the exception if permission is not granted
                     requestExactAlarmPermission()
                 }
             } else {
-                // Request the exact alarm permission if not already granted
                 requestExactAlarmPermission()
             }
         } else { // Below API level 31
             try {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    pendingIntent
-                )
-                Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
+                setRepeatingExactAlarm(alarmManager, calendar.timeInMillis, pendingIntent)
             } catch (e: SecurityException) {
-                // Handle the exception if permission is not granted
                 Toast.makeText(requireContext(), "Permission denied to set exact alarms", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun setRepeatingExactAlarm(alarmManager: AlarmManager, triggerAtMillis: Long, pendingIntent: PendingIntent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                pendingIntent
+            )
+        } else {
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+        }
+        Toast.makeText(requireContext(), "Repeating Alarm Set", Toast.LENGTH_SHORT).show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun requestExactAlarmPermission() {
         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
         startActivity(intent)
