@@ -52,13 +52,13 @@ class AlarmFragment : Fragment() {
         // Create notification channel
         createNotificationChannel()
 
-        // Load the saved alarms
-        alarms.addAll(loadAlarms())
-
         // Set up RecyclerView
         binding.recyclerViewAlarms.layoutManager = LinearLayoutManager(context)
         adapter = AlarmAdapter(alarms, { alarm -> deleteAlarm(alarm) }, { alarm -> toggleAlarm(alarm) })
         binding.recyclerViewAlarms.adapter = adapter
+
+        // Load the saved alarms
+        reloadAlarms()
 
         // Set up listeners
         binding.imageBtnTime.setOnClickListener {
@@ -99,10 +99,12 @@ class AlarmFragment : Fragment() {
         timePicker.addOnPositiveButtonClickListener {
             val hour = timePicker.hour
             val minute = timePicker.minute
-            val formattedTime = if (hour > 12) {
+            val formattedTime = if (hour == 12) {
+                String.format("%02d:%02d PM", hour, minute)
+            } else if (hour > 12) {
                 String.format("%02d:%02d PM", hour - 12, minute)
             } else {
-                String.format("%02d:%02d AM", hour, minute)
+                String.format("%02d:%02d AM", if (hour == 0) 12 else hour, minute)
             }
             binding.selectTime.text = formattedTime
 
@@ -121,7 +123,6 @@ class AlarmFragment : Fragment() {
     }
 
     private fun loadAlarms(): List<Alarm> {
-        alarms.clear() // Clear the existing alarms to avoid duplicates
         val gson = Gson()
         val json = sharedPreferences.getString("alarms", null)
         val type = object : TypeToken<List<Alarm>>() {}.type
@@ -131,6 +132,13 @@ class AlarmFragment : Fragment() {
             gson.fromJson(json, type)
         }
     }
+
+    private fun reloadAlarms() {
+        alarms.clear()
+        alarms.addAll(loadAlarms())
+        adapter.notifyDataSetChanged()
+    }
+
 
     private fun addAlarm(alarm: Alarm) {
         alarms.add(alarm)
@@ -219,12 +227,22 @@ class AlarmFragment : Fragment() {
 
     private fun setRepeatingExactAlarm(alarmManager: AlarmManager, triggerAtMillis: Long, pendingIntent: PendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // For Android 12 and above
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
                 pendingIntent
             )
+
+            // Schedule a repeating alarm every day using setRepeating
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
         } else {
+            // For Android 11 and below
             alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 triggerAtMillis,
@@ -232,8 +250,9 @@ class AlarmFragment : Fragment() {
                 pendingIntent
             )
         }
-        Toast.makeText(requireContext(), "Repeating Alarm Set", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
     }
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun requestExactAlarmPermission() {
