@@ -52,13 +52,13 @@ class AlarmFragment : Fragment() {
         // Create notification channel
         createNotificationChannel()
 
+        // Load the saved alarms
+        alarms.addAll(loadAlarms())
+
         // Set up RecyclerView
         binding.recyclerViewAlarms.layoutManager = LinearLayoutManager(context)
         adapter = AlarmAdapter(alarms, { alarm -> deleteAlarm(alarm) }, { alarm -> toggleAlarm(alarm) })
         binding.recyclerViewAlarms.adapter = adapter
-
-        // Load the saved alarms
-        reloadAlarms()
 
         // Set up listeners
         binding.imageBtnTime.setOnClickListener {
@@ -99,12 +99,10 @@ class AlarmFragment : Fragment() {
         timePicker.addOnPositiveButtonClickListener {
             val hour = timePicker.hour
             val minute = timePicker.minute
-            val formattedTime = if (hour == 12) {
-                String.format("%02d:%02d PM", hour, minute)
-            } else if (hour > 12) {
+            val formattedTime = if (hour > 12) {
                 String.format("%02d:%02d PM", hour - 12, minute)
             } else {
-                String.format("%02d:%02d AM", if (hour == 0) 12 else hour, minute)
+                String.format("%02d:%02d AM", hour, minute)
             }
             binding.selectTime.text = formattedTime
 
@@ -123,6 +121,7 @@ class AlarmFragment : Fragment() {
     }
 
     private fun loadAlarms(): List<Alarm> {
+        alarms.clear() // Clear the existing alarms to avoid duplicates
         val gson = Gson()
         val json = sharedPreferences.getString("alarms", null)
         val type = object : TypeToken<List<Alarm>>() {}.type
@@ -132,13 +131,6 @@ class AlarmFragment : Fragment() {
             gson.fromJson(json, type)
         }
     }
-
-    private fun reloadAlarms() {
-        alarms.clear()
-        alarms.addAll(loadAlarms())
-        adapter.notifyDataSetChanged()
-    }
-
 
     private fun addAlarm(alarm: Alarm) {
         alarms.add(alarm)
@@ -185,6 +177,7 @@ class AlarmFragment : Fragment() {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java).apply {
             putExtra("alarm_id", alarm.id)
+            action = "com.example.alarm.ACTION_${alarm.id}"
         }
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
@@ -200,61 +193,42 @@ class AlarmFragment : Fragment() {
             set(Calendar.MILLISECOND, 0)
         }
 
-        // If the set time has already passed for today, set it for the next day
-        if (calendar.timeInMillis < System.currentTimeMillis()) {
+        if (calendar.timeInMillis < System.currentTimeMillis()) {  // for next day
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        // Handle setting the alarm with repeating behavior
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API level 31 and above
             if (alarmManager.canScheduleExactAlarms()) {
                 try {
-                    setRepeatingExactAlarm(alarmManager, calendar.timeInMillis, pendingIntent)
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent
+                    )
+                    Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
                 } catch (e: SecurityException) {
+                    // Handle the exception if permission is not granted
                     requestExactAlarmPermission()
                 }
             } else {
+                // Request the exact alarm permission if not already granted
                 requestExactAlarmPermission()
             }
         } else { // Below API level 31
             try {
-                setRepeatingExactAlarm(alarmManager, calendar.timeInMillis, pendingIntent)
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+                Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
             } catch (e: SecurityException) {
+                // Handle the exception if permission is not granted
                 Toast.makeText(requireContext(), "Permission denied to set exact alarms", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun setRepeatingExactAlarm(alarmManager: AlarmManager, triggerAtMillis: Long, pendingIntent: PendingIntent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // For Android 12 and above
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerAtMillis,
-                pendingIntent
-            )
-
-            // Schedule a repeating alarm every day using setRepeating
-            alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                triggerAtMillis,
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-        } else {
-            // For Android 11 and below
-            alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                triggerAtMillis,
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-        }
-        Toast.makeText(requireContext(), "Alarm Set", Toast.LENGTH_SHORT).show()
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.S)
     private fun requestExactAlarmPermission() {
         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
         startActivity(intent)

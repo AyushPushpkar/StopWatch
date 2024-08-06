@@ -97,7 +97,7 @@
             android:layout_marginTop="124dp"
             android:layout_marginEnd="35dp"
             android:fontFamily="@font/aclonica"
-            android:text="Sunny"
+            android:text="Weather"
             android:textAllCaps="true"
             android:textColor="#FB135C"
             android:textSize="18sp"

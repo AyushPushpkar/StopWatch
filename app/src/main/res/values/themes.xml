@@ -10,7 +10,7 @@
         <item name="itemTextColor">@color/red</item>
     </style>
 
-    <style name="Theme.StopWatch" parent="Theme.Material3.DayNight.NoActionBar" >
+    <style name="Theme.StopWatch" parent="Theme.Material3.DayNight.NoActionBar">
 
         <item name="colorPrimary">@color/tint</item>
         <item name="colorPrimaryVariant">@color/tint</item>
