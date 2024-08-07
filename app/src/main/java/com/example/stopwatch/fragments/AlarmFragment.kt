@@ -177,7 +177,7 @@ class AlarmFragment : Fragment() {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java).apply {
             putExtra("alarm_id", alarm.id)
-            action = "com.example.alarm.ACTION_${alarm.id}"
+            action = "com.example.alarm.ACTION_${alarm.id}${System.currentTimeMillis()}"
         }
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
@@ -229,6 +229,7 @@ class AlarmFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun requestExactAlarmPermission() {
         val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
         startActivity(intent)

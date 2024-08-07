@@ -32,7 +32,7 @@ class AlarmReceiver : BroadcastReceiver() {
             context,
             alarmId,
             nextActivity,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         // Create notification
@@ -63,7 +63,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("alarm_id", alarmId)
-            action = "com.example.alarm.ACTION_$alarmId"
+            action = "com.example.alarm.ACTION_$alarmId${System.currentTimeMillis()}"
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
